@@ -1,0 +1,6 @@
+
+.DS_Store
+.idea/modules.xml
+.idea/vfb_rest.iml
+.idea/workspace.xml
+*.pyc
