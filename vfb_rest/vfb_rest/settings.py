@@ -94,10 +94,10 @@ MIDDLEWARE = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'tutorial.urls'
+ROOT_URLCONF = 'vfb_rest.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'tutorial.wsgi.application'
+WSGI_APPLICATION = 'vfb_rest.wsgi.application'
 
 TEMPLATES = [
     {

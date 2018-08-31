@@ -9,7 +9,7 @@ class VfbidserverConfig(AppConfig):
 
     def ready(self):
         print("Test")
-        #self.loadDatasets()
+        self.loadDatasets()
         #self.loadVFBids()
 
     def loadDatasets(self):
@@ -19,9 +19,8 @@ class VfbidserverConfig(AppConfig):
         result = kb.query(q)
         if result:
             for n in result:
-                iri = n['n']['iri']
-                print(iri)
-                ds = dataset(datasetid=iri, datasetlabel='')
+                n = n['n']
+                ds = dataset(datasetid=n['iri'], label=n['label'], short_form=n['short_form'],created=False)
                 ds.save(force_insert=False)
 
     def loadVFBids(self):
@@ -35,7 +34,7 @@ class VfbidserverConfig(AppConfig):
             n = kb.getNeuronMetadata(n)
             vid = n['vfbid']
             ds = neuron(vfbid=vid, primary_name=label)
-            ds.save()
+            ds.save(force_insert=False)
             i = i + 1
             if i>10:
                 break
