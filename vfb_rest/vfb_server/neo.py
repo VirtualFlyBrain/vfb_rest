@@ -126,9 +126,10 @@ class neo:
                 print("TEMPLATE: " + sf_template)
                 print("ANATOMY_ATTRIBUTE: " + str(anatomy_attributes))
                 print("ORCID: " + str(orcid))
+                print("DBXREFS: " + str(dbxrefs))
 
 
-                pw.add_anatomy_image_set(dataset=ds_sf,label=label,anatomical_type=anatomical_type,imaging_type=imaging_type,start=start,template=sf_template, anatomy_attributes=anatomy_attributes,orcid=orcid, hard_fail=True)
+                pw.add_anatomy_image_set(dataset=ds_sf,label=label,anatomical_type=anatomical_type,imaging_type=imaging_type,start=start,template=sf_template, anatomy_attributes=anatomy_attributes,orcid=orcid, dbxrefs=dbxrefs, hard_fail=True)
                 pw.commit()
                 vid = self.get_vfbid_if_exists(label, datasetid)
                 print(":::Y:::"+str(vid))
@@ -213,7 +214,7 @@ class neo:
         return self.iri_generator.id_name
 
     def getNeuronMetadata(self, iri):
-        q = "MATCH (n:Individual {iri: '%s'})-[:has_source]-(p) MATCH (n)-[:Annotation]-(o) MATCH (n)-[:INSTANCEOF]-(c:Class) RETURN n,p,c,o" % (iri)
+        q = "MATCH (n:Individual {iri: '%s'})-[:has_source]-(p) MATCH (n)-[:Annotation]-(o) MATCH (n)-[:INSTANCEOF]-(c:Class) MATCH (n)-[:database_cross_reference]-(d) RETURN n,p,c,o,d" % (iri)
         #q = "MATCH (n:Individual {iri: '%s'})-[:has_source]-(p) RETURN n,p" % (iri)
         result = self.query(q)
         if result:
@@ -227,7 +228,7 @@ class neo:
                     'alternative_names': '%s' % "|".join(n['n']['synonyms']),
                     'orcid': '%s' % n['o']['iri'],
                     'datasetid': '%s' % n['p']['iri'],
-                    'external_identifiers': '%s' % 'not implemented',
+                    'external_identifiers': '%s' % n['d']['short_form'],
                     'classification_comment': '%s' % 'not implemented'
                 }
                 return n
