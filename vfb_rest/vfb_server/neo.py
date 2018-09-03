@@ -21,6 +21,7 @@ class neo:
         print('Getting or creating dataset %s' % name)
         vid = self.get_datasetid_if_exists(short_form)
 
+
         if vid:
             print('DataSet exists!')
             n = self.getDatasetMetadata(vid)
@@ -45,7 +46,12 @@ class neo:
     def create_or_get_neuron(self, primary_name, alternative_names, external_identifiers, orcid, datasetid, anatomical_type):
         print('Getting or creating ID %s' % primary_name)
         #Check if the combination of label and dataset already exists.
+        did = self.dataset_exists(datasetid)
         vid = self.get_vfbid_if_exists(primary_name,datasetid)
+
+        if not did:
+            raise Exception('VFB identifier was not successfully created. Unknown dataset id '+datasetid)
+
         if vid:
             print('Identifier exists!')
             n = self.getNeuronMetadata(vid)
@@ -56,9 +62,22 @@ class neo:
             print('Identifier does not exist!')
             pw = self.pattern_writer
             try:
+                if not self.node_exists(anatomical_type):
+                    print('Anatomical type does not exist, setting NEURON')
+                    anatomical_type = 'FBbt_00005106'
+                ds = self.getDatasetMetadata(datasetid)
+                ds_sf = ds['short_form']
                 imaging_type='SB-SEM'
-                pw.add_anatomy_image_set(dataset=datasetid,label=primary_name,anatomical_type=anatomical_type,imaging_type=imaging_type,start=98989,template='http://virtualflybrain.org/reports/VFBc_00017894')
-                vid = self.get_vfbid_if_exists(primary_name, datasetid)
+                label = primary_name+' of '+ds['label']
+                sf_template = self.get_short_form(iri='http://virtualflybrain.org/reports/VFBc_00017894')
+                print("TEMPLATE: " + sf_template)
+                print("LABEL: " + label)
+                print("Dataset: " + ds_sf)
+                print("Anatomical Type: " + anatomical_type)
+                print("Imaging Type: " + imaging_type)
+
+                pw.add_anatomy_image_set(dataset=ds_sf,label=label,anatomical_type=anatomical_type,imaging_type=imaging_type,start=98989,template=sf_template)
+                vid = self.get_vfbid_if_exists(label, datasetid)
                 if vid:
                     n = self.getNeuronMetadata(vid)
                     n['created'] = True
@@ -82,18 +101,43 @@ class neo:
         else:
             return False
 
+    def get_short_form(self,iri):
+        q = "MATCH (n {iri: '%s'}) RETURN n" % iri
+        result = self.query(q)
+        if result:
+            for n in result:
+                sf = n['n']['short_form']
+                return sf
+        else:
+            return False
+
     def get_datasetid_if_exists(self, short_form):
         q = "MATCH (n:DataSet {short_form: '%s'}) RETURN n" % (short_form)
         print(q)
         result = self.query(q)
-        print(result)
-        print(type(result))
         if result:
-            print("result:true")
             for n in result:
                 iri = n['n']['iri']
                 print(iri)
                 return iri
+        else:
+            return False
+
+    def dataset_exists(self, id):
+        q = "MATCH (n:DataSet {iri: '%s'}) RETURN n" % (id)
+        print(q)
+        result = self.query(q)
+        if result:
+            return True
+        else:
+            return False
+
+    def node_exists(self, id):
+        q = "MATCH (n {iri: '%s'}) RETURN n" % (id)
+        print(q)
+        result = self.query(q)
+        if result:
+            return True
         else:
             return False
 
