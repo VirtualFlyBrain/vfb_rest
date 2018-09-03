@@ -1,4 +1,6 @@
 import os
+import re
+
 from vfb.uk.ac.ebi.vfb.neo4j.KB_tools import kb_writer, iri_generator, KB_pattern_writer
 from vfb.uk.ac.ebi.vfb.neo4j.neo4j_tools import results_2_dict_list
 
@@ -6,9 +8,9 @@ from vfb.uk.ac.ebi.vfb.neo4j.neo4j_tools import results_2_dict_list
 
 class neo:
     def __init__(self):
-        #os.environ["KBserver"] = "http://localhost:7474"
-        #os.environ["KBuser"] = "neo4j"
-        #os.environ["KBpassword"] = "neo4j/neo"
+        os.environ["KBserver"] = "http://localhost:7474"
+        os.environ["KBuser"] = "neo4j"
+        os.environ["KBpassword"] = "neo4j/neo"
         kb = os.getenv('KBserver')
         user = os.getenv('KBuser')
         password = os.getenv('KBpassword')
@@ -16,11 +18,11 @@ class neo:
         self.pattern_writer = KB_pattern_writer(kb,user,password)
         self.iri_generator = iri_generator(kb,user,password)
         self.iri_generator.set_default_config()
+        self.orcid_pattern="^\s*(?:(?:https?://)?orcid.org/)?([0-9]{4})\-?([0-9]{4})\-?([0-9]{4})\-?([0-9]{4})\s*$"
 
     def create_or_get_dataset(self,name,license='',short_form='',description=''):
         print('Getting or creating dataset %s' % name)
         vid = self.get_datasetid_if_exists(short_form)
-
 
         if vid:
             print('DataSet exists!')
@@ -33,17 +35,44 @@ class neo:
             pw = self.pattern_writer
             try:
                 pw.add_dataSet(short_form=short_form, name=name, license=license)
+                pw.commit()
                 vid = self.get_datasetid_if_exists(short_form)
                 n = self.getDatasetMetadata(vid)
                 n['created'] = True
                 return n
-            except OSError as err:
-                print("OS error: {0}".format(err))
             except:
                 print("An unexpected error occurred")
                 raise
 
-    def create_or_get_neuron(self, primary_name, alternative_names, external_identifiers, orcid, datasetid, anatomical_type):
+    def create_or_get_person(self,orcid):
+        print('Getting or creating person %s' % orcid)
+        if not self.valid_orcid(orcid):
+            raise Exception('Person was not successfully created. Invalid orcid: ' + orcid+'. Should look similar to http://orcid.org/0000-0000-0000-0001')
+        vid = self.get_person_if_exists(orcid)
+
+        if vid:
+            print('Person exists!')
+            n = self.getPersonMetadata(vid)
+            n['created']=False
+            return n
+        else:
+            # if it does not exist, generate it
+            print('Person does not exist!')
+            pw = self.pattern_writer
+            try:
+                pw.ni.add_node(labels=["Person",],IRI=orcid)
+                pw.ni.commit()
+                n = self.getPersonMetadata(orcid)
+                n['created'] = True
+                return n
+            except:
+                print("An unexpected error occurred")
+                raise
+
+    def valid_orcid(self,orcid):
+        return re.match(self.orcid_pattern,orcid)
+
+    def create_or_get_neuron(self, primary_name, alternative_names, external_identifier, orcid, datasetid, anatomical_type, project, classification_comment):
         print('Getting or creating ID %s' % primary_name)
         #Check if the combination of label and dataset already exists.
         did = self.dataset_exists(datasetid)
@@ -69,17 +98,43 @@ class neo:
                 ds_sf = ds['short_form']
                 imaging_type='SB-SEM'
                 label = primary_name+' of '+ds['label']
-                sf_template = self.get_short_form(iri='http://virtualflybrain.org/reports/VFBc_00017894')
-                print("TEMPLATE: " + sf_template)
-                print("LABEL: " + label)
+                sf_template = ''
+                dbxrefs = dict()
+                print('ORCID: '+orcid)
+                orcid = self.get_short_form(orcid)
+
+                if project == "L1EM_Cardona":
+                    sf_template = "VFBc_00050000"
+                    dbxrefs['VFBsite_catmaid_l1em'] = external_identifier
+                elif project == "FAFB":
+                    sf_template = "VFBc_00017894"
+                    #dbxrefs['VFBsite_catmaid_l1em'] = external_identifier
+                else:
+                    raise Exception('VFB identifier was not successfully created. Unknown project ' + project)
+
+                #self.get_short_form(iri='http://virtualflybrain.org/reports/VFBc_00017894')
+                anatomy_attributes = dict()
+                anatomy_attributes['synonyms'] = alternative_names.split('|')
+
+                start = 98989
+
                 print("Dataset: " + ds_sf)
+                print("LABEL: " + label)
                 print("Anatomical Type: " + anatomical_type)
                 print("Imaging Type: " + imaging_type)
+                print("START: " + str(start))
+                print("TEMPLATE: " + sf_template)
+                print("ANATOMY_ATTRIBUTE: " + str(anatomy_attributes))
+                print("ORCID: " + str(orcid))
 
-                pw.add_anatomy_image_set(dataset=ds_sf,label=label,anatomical_type=anatomical_type,imaging_type=imaging_type,start=98989,template=sf_template)
+
+                pw.add_anatomy_image_set(dataset=ds_sf,label=label,anatomical_type=anatomical_type,imaging_type=imaging_type,start=start,template=sf_template, anatomy_attributes=anatomy_attributes,orcid=orcid, hard_fail=True)
+                pw.commit()
                 vid = self.get_vfbid_if_exists(label, datasetid)
+                print(":::Y:::"+str(vid))
                 if vid:
                     n = self.getNeuronMetadata(vid)
+                    print(":::Z:::")
                     n['created'] = True
                     return n
                 else:
@@ -89,6 +144,7 @@ class neo:
             except:
                 print("An unexpected error occurred")
                 raise
+
 
     def get_vfbid_if_exists(self, primary_name, datasetid):
         q = "MATCH (n:Individual {label: '%s'})-[:has_source]-(p {iri:'%s'}) RETURN n,p" % (primary_name, datasetid)
@@ -123,6 +179,18 @@ class neo:
         else:
             return False
 
+    def get_person_if_exists(self, orcid):
+        q = "MATCH (n:Person {iri: '%s'}) RETURN n" % (orcid)
+        print(q)
+        result = self.query(q)
+        if result:
+            for n in result:
+                iri = n['n']['iri']
+                print(iri)
+                return iri
+        else:
+            return False
+
     def dataset_exists(self, id):
         q = "MATCH (n:DataSet {iri: '%s'}) RETURN n" % (id)
         print(q)
@@ -145,19 +213,36 @@ class neo:
         return self.iri_generator.id_name
 
     def getNeuronMetadata(self, iri):
-        q = "MATCH (n:Individual {iri: '%s'})-[:has_source]-(p) RETURN n,p" % (iri)
+        q = "MATCH (n:Individual {iri: '%s'})-[:has_source]-(p) MATCH (n)-[:Annotation]-(o) MATCH (n)-[:INSTANCEOF]-(c:Class) RETURN n,p,c,o" % (iri)
+        #q = "MATCH (n:Individual {iri: '%s'})-[:has_source]-(p) RETURN n,p" % (iri)
         result = self.query(q)
         if result:
             for n in result:
+                print('ahsiahj')
                 print(n['n'])
                 n = {
                     'vfbid': '%s' % n['n']['iri'],
                     'primary_name': '%s' % n['n']['label'],
-                    'neuron_type': '%s' % 'not implemented',
-                    'alternative_names': '%s' % 'not implemented',
-                    'orcid': '%s' % 'not implemented',
+                    'neuron_type': '%s' % n['c']['iri'],
+                    'alternative_names': '%s' % "|".join(n['n']['synonyms']),
+                    'orcid': '%s' % n['o']['iri'],
                     'datasetid': '%s' % n['p']['iri'],
-                    'external_identifiers': '%s' % 'not implemented'
+                    'external_identifiers': '%s' % 'not implemented',
+                    'classification_comment': '%s' % 'not implemented'
+                }
+                return n
+        else:
+            return False
+
+    def getPersonMetadata(self, iri):
+        q = "MATCH (n:Person {iri:'%s'}) RETURN n" % (iri)
+        result = self.query(q)
+        if result:
+            for n in result:
+                print('ahsiahj')
+                print(n['n'])
+                n = {
+                    'orcid': '%s' % iri,
                 }
                 return n
         else:
@@ -165,6 +250,7 @@ class neo:
 
     def getDatasetMetadata(self, iri):
         q = "MATCH (n:DataSet {iri: '%s'}) RETURN n" % (iri)
+
         result = self.query(q)
         if result:
             for n in result:

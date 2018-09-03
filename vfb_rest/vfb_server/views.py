@@ -6,8 +6,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import authentication, permissions, status, viewsets
 from .neo import neo
-from .models import neuron, dataset
-from .serializers import neuronSerializer, datasetSerializer, neuronSerializerSimple, datasetSerializerSimple
+from .models import neuron, dataset, person
+from .serializers import neuronSerializer, datasetSerializer, neuronSerializerSimple, datasetSerializerSimple, \
+    personSerializer
 
 from django.db.utils import OperationalError
 
@@ -70,7 +71,7 @@ class neuronViewSet(viewsets.ModelViewSet):
 
     def create_or_get_neuron(self, data):
         kb = neo()
-        data = kb.create_or_get_neuron(primary_name=data['primary_name'], alternative_names=data['alternative_names'], external_identifiers=data['external_identifiers'], orcid=data['orcid'], datasetid=data['datasetid'], anatomical_type=data['neuron_type'])
+        data = kb.create_or_get_neuron(primary_name=data['primary_name'], alternative_names=data['alternative_names'], external_identifier=data['external_identifiers'], classification_comment=data['classification_comment'], orcid=data['orcid'], project=data['project'], datasetid=data['datasetid'], anatomical_type=data['neuron_type'])
         return data
 
 # @api_view(['GET', 'POST'])
@@ -83,3 +84,46 @@ class neuronViewSet(viewsets.ModelViewSet):
 #             dc = results_2_dict_list(result)
 #             return Response(dc)
 #     return Response({"message": "Hello, world!"})
+
+class personViewSet(viewsets.ModelViewSet):
+    queryset = person.objects.all()
+    serializer_class = personSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    http_method_names = ['post', 'head']
+
+    def create(self, request, *args, **kwargs):
+        # This is the main point: transforming the simple, user facing data model into the extended internal one
+
+        message = ''
+        created = False
+
+        try:
+            data = self.create_or_get_person(data=request.data)
+            created = data['created']
+            serializer = self.get_serializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+
+        except Exception as e:
+            print(e)
+            message = str(e)
+
+        if message =='':
+            d = serializer.data
+            headers = self.get_success_headers(d)
+            response = dict()
+            if created is False:
+                response['data'] = d
+                response['message'] = "Person was already created.."
+                return Response(response, status=status.HTTP_304_NOT_MODIFIED, headers=headers)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response("{message: " + message + "}", status=status.HTTP_404_NOT_FOUND)
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+    def create_or_get_person(self,data):
+        kb = neo()
+        data = kb.create_or_get_person(orcid=data['orcid'])
+        return data

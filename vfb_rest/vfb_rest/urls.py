@@ -7,6 +7,7 @@ from vfb_server import views
 router = DefaultRouter()
 router.register(r'dataset', views.datasetViewSet)
 router.register(r'neuron', views.neuronViewSet)
+router.register(r'person', views.personViewSet)
 
 
 schema_view = get_swagger_view(title='Snippets API')

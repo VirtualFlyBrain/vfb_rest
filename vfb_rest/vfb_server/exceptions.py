@@ -1,0 +1,3 @@
+
+class VFBServerException(Exception):
+    pass
