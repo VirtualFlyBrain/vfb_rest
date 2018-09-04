@@ -130,7 +130,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # 'django.contrib.admindocs',
     'rest_framework',
-    'vfb',
+    #'vfb',
     'rest_framework_swagger',
     'vfb_server',
 )

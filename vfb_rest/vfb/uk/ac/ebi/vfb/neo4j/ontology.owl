@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.w3.org/2002/07/owl"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:neo4j="http://neo4j.com#"
+     xmlns:untitled-ontology-73="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#">
+    <Ontology/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://neo4j.com#nodeLabel -->
+
+    <AnnotationProperty rdf:about="http://neo4j.com#nodeLabel"/>
+    
+
+
+    <!-- http://www.w3.org/2000/01/rdf-schema#comment -->
+
+    <AnnotationProperty rdf:about="http://www.w3.org/2000/01/rdf-schema#comment">
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">AnnotationProperty</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+    </AnnotationProperty>
+    
+
+
+    <!-- http://www.w3.org/2000/01/rdf-schema#isDefinedBy -->
+
+    <AnnotationProperty rdf:about="http://www.w3.org/2000/01/rdf-schema#isDefinedBy">
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">AnnotationProperty</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+    </AnnotationProperty>
+    
+
+
+    <!-- http://www.w3.org/2000/01/rdf-schema#label -->
+
+    <AnnotationProperty rdf:about="http://www.w3.org/2000/01/rdf-schema#label">
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">AnnotationProperty</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+    </AnnotationProperty>
+    
+
+
+    <!-- http://www.w3.org/2000/01/rdf-schema#seeAlso -->
+
+    <AnnotationProperty rdf:about="http://www.w3.org/2000/01/rdf-schema#seeAlso">
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">AnnotationProperty</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+    </AnnotationProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://purl.obolibrary.org/obo/BFO_0000051 -->
+
+    <ObjectProperty rdf:about="http://purl.obolibrary.org/obo/BFO_0000051">
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ObjectProperty</neo4j:nodeLabel>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">has part</rdfs:label>
+    </ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#P -->
+
+    <ObjectProperty rdf:about="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#P">
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ObjectProperty</neo4j:nodeLabel>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">has part&apos;:@&quot;</rdfs:label>
+    </ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#R -->
+
+    <ObjectProperty rdf:about="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#R">
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ObjectProperty</neo4j:nodeLabel>
+        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">test comment</rdfs:comment>
+    </ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#A -->
+
+    <Class rdf:about="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#A">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#A"/>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Class</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">aa</rdfs:comment>
+        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">bb</rdfs:comment>
+        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">cc</rdfs:comment>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">dds</rdfs:label>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sd</rdfs:label>
+    </Class>
+    
+
+
+    <!-- http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#B -->
+
+    <Class rdf:about="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#B">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#A"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#B"/>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Class</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+    </Class>
+    
+
+
+    <!-- http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#C -->
+
+    <Class rdf:about="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#C">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#C"/>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="http://purl.obolibrary.org/obo/BFO_0000051"/>
+                <someValuesFrom rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#D"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#P"/>
+                <someValuesFrom rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#D"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#R"/>
+                <someValuesFrom rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#A"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Class</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+    </Class>
+    
+
+
+    <!-- http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#D -->
+
+    <Class rdf:about="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#D">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#C"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#D"/>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="http://purl.obolibrary.org/obo/BFO_0000051"/>
+                <someValuesFrom rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#A"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#R"/>
+                <someValuesFrom rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#B"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#R"/>
+                <hasValue rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#i"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Class</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+        <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string">yaiusy08u s8ua 9 . (**T %&amp;^%</rdfs:isDefinedBy>
+        <rdfs:seeAlso rdf:datatype="http://www.w3.org/2001/XMLSchema#string">unknownX</rdfs:seeAlso>
+    </Class>
+    
+
+
+    <!-- http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST1 -->
+
+    <Class rdf:about="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST1">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#B"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST1"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST2"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST3"/>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Class</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+    </Class>
+    
+
+
+    <!-- http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST2 -->
+
+    <Class rdf:about="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST2">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#B"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST1"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST2"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST3"/>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Class</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+    </Class>
+    
+
+
+    <!-- http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST3 -->
+
+    <Class rdf:about="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST3">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#B"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST1"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST2"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST3"/>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Class</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+    </Class>
+    
+
+
+    <!-- http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST4 -->
+
+    <Class rdf:about="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST4">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST1"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST2"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST3"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#TEST4"/>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Class</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+    </Class>
+    
+
+
+    <!-- http://www.w3.org/2002/07/owl#Thing -->
+
+    <Class rdf:about="http://www.w3.org/2002/07/owl#Thing">
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Class</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+    </Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#i -->
+
+    <NamedIndividual rdf:about="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#i">
+        <rdf:type rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#C"/>
+        <rdf:type>
+            <Restriction>
+                <onProperty rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#R"/>
+                <someValuesFrom rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#C"/>
+            </Restriction>
+        </rdf:type>
+        <untitled-ontology-73:R rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#j"/>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Individual</neo4j:nodeLabel>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#j -->
+
+    <NamedIndividual rdf:about="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#j">
+        <rdf:type rdf:resource="http://www.semanticweb.org/matentzn/ontologies/2018/1/untitled-ontology-73#B"/>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity</neo4j:nodeLabel>
+        <neo4j:nodeLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Individual</neo4j:nodeLabel>
+    </NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.1) https://github.com/owlcs/owlapi -->
+
