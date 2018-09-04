@@ -26,19 +26,36 @@ class datasetViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         # This is the main point: transforming the simple, user facing data model into the extended internal one
-        data = self.create_or_get_dataset(data=request.data)
-        print(data)
-        serializer=datasetSerializer(data=data)
-        #serializerSimple = self.get_serializer(data=data)
-        try:
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-        except Exception:
-            print('Error: Validation of dataset failed during creation (datasetViewSet:create)')
+        message = ''
+        created = False
 
-        print(serializer.data)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+        try:
+            data = self.create_or_get_dataset(data=request.data)
+            serializer = datasetSerializer(data=data)
+            created = data['created']
+            # serializerSimple = self.get_serializer(data=data)
+            try:
+                serializer.is_valid(raise_exception=True)
+                self.perform_create(serializer)
+            except:
+                pass
+        except Exception as e:
+            print('Error: Validation of dataset failed during creation (datasetViewSet:create): '+str(e))
+            message = str(e)
+
+        if message =='':
+            d = serializer.data
+            headers = self.get_success_headers(d)
+            response = dict()
+            if created is False:
+                response['data'] = d
+                response['message'] = "A dataset with the given short_form was already created. Return existing record."
+                print("Response: " + str(response))
+                return Response("{message: " + str(response) + "}", status=status.HTTP_202_ACCEPTED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response("{message: " + message + "}", status=status.HTTP_404_NOT_FOUND)
 
     def perform_create(self, serializer):
         serializer.save()
@@ -56,15 +73,36 @@ class neuronViewSet(viewsets.ModelViewSet):
     http_method_names = ['post', 'head']
 
     def create(self, request, *args, **kwargs):
-        data = self.create_or_get_neuron(data=request.data)
-        serializer = neuronSerializer(data=data)
+        message = ''
+        created = False
+        neuron = request.data['primary_name']
+        dataset  = request.data['datasetid']
+
         try:
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-        except:
-            print('Error: Validation of neuron failed during creation (neuronViewSet:create)')
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            data = self.create_or_get_neuron(data=request.data)
+            created = data['created']
+            serializer = neuronSerializer(data=data)
+            try:
+                serializer.is_valid(raise_exception=True)
+                self.perform_create(serializer)
+            except:
+                pass
+        except Exception as e:
+            print(e)
+            message = str(e)
+
+        if message =='':
+            #d = serializer.data
+            #headers = self.get_success_headers(d)
+            #response = dict()
+            if created is False:
+                # response['data'] = d
+                # response['message'] = "A neuron with label " + neuron + " was already registered for the dataset " + dataset + ". Return existing record."
+                # print("Response: " + str(response))
+                return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response("{message: " + message + "}", status=status.HTTP_404_NOT_FOUND)
 
     def perform_create(self, serializer):
         serializer.save()
@@ -101,8 +139,11 @@ class personViewSet(viewsets.ModelViewSet):
             data = self.create_or_get_person(data=request.data)
             created = data['created']
             serializer = self.get_serializer(data=data)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
+            try:
+                serializer.is_valid(raise_exception=True)
+                self.perform_create(serializer)
+            except:
+                pass
 
         except Exception as e:
             print(e)
@@ -115,7 +156,8 @@ class personViewSet(viewsets.ModelViewSet):
             if created is False:
                 response['data'] = d
                 response['message'] = "Person was already created.."
-                return Response(response, status=status.HTTP_304_NOT_MODIFIED, headers=headers)
+                print("Response: "+str(response))
+                return Response(data=str(response), status=status.HTTP_304_NOT_MODIFIED, headers=headers)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response("{message: " + message + "}", status=status.HTTP_404_NOT_FOUND)

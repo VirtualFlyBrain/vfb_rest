@@ -13,6 +13,8 @@ class irigen:
         kb = os.getenv('KBserver')
         user = os.getenv('KBuser')
         password = os.getenv('KBpassword')
+        q_test='MATCH (n:Individual) RETURN n LIMIT 1'
+
         self.iri_generator = iri_generator(kb, user, password)
         self.iri_generator.set_default_config()
 
@@ -87,10 +89,16 @@ class neo:
         print('Getting or creating ID %s' % primary_name)
         #Check if the combination of label and dataset already exists.
         did = self.dataset_exists(datasetid)
-        vid = self.get_vfbid_if_exists(primary_name,datasetid)
 
         if not did:
             raise Exception('VFB identifier was not successfully created. Unknown dataset id '+datasetid)
+
+        ds = self.getDatasetMetadata(datasetid)
+        ds_sf = ds['short_form']
+        imaging_type = 'SB-SEM'
+        label = primary_name + ' of ' + ds['label']
+
+        vid = self.get_vfbid_if_exists(label,datasetid)
 
         if vid:
             print('Identifier exists!')
@@ -102,13 +110,10 @@ class neo:
             print('Identifier does not exist!')
             pw = self.pattern_writer
             try:
-                if not self.node_exists(anatomical_type):
+                if not self.node_exists(anatomical_type,on='short_form'):
                     print('Anatomical type does not exist, setting NEURON')
                     anatomical_type = 'FBbt_00005106'
-                ds = self.getDatasetMetadata(datasetid)
-                ds_sf = ds['short_form']
-                imaging_type='SB-SEM'
-                label = primary_name+' of '+ds['label']
+
                 sf_template = ''
                 dbxrefs = dict()
                 print('ORCID: '+orcid)
@@ -151,11 +156,8 @@ class neo:
                     return n
                 else:
                     raise Exception('VFB identifier was not successfully created.')
-            except OSError as err:
-                print("OS error: {0}".format(err))
-            except:
-                print("An unexpected error occurred")
-                raise
+            except Exception as e:
+                raise Exception("Neuron creation failed: "+str(e))
 
 
     def get_vfbid_if_exists(self, primary_name, datasetid):
@@ -212,8 +214,8 @@ class neo:
         else:
             return False
 
-    def node_exists(self, id):
-        q = "MATCH (n {iri: '%s'}) RETURN n" % (id)
+    def node_exists(self, id,on='iri'):
+        q = "MATCH (n {%s: '%s'}) RETURN n" % (on,id)
         print(q)
         result = self.query(q)
         if result:
