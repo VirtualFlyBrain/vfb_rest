@@ -9,7 +9,7 @@ class VfbidserverConfig(AppConfig):
 
     def ready(self):
         print("Test")
-        self.loadDatasets()
+        #self.loadDatasets()
         #self.loadVFBids()
 
     def loadDatasets(self):

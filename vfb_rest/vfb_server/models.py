@@ -8,17 +8,13 @@ PROJECT_CHOICES = [
 class neuron(models.Model):
     vfbid = models.URLField(primary_key=True)
     primary_name = models.CharField(max_length=200, blank=False, help_text='The primary name for the individual neuron.')
-    neuron_type = models.URLField(default='http://purl.obolibrary.org/obo/FBbt_00005106', blank=False,
-                                      help_text='Valid VFB Identifier denoting anatomical entity, such as a neuron. If left blank, we will assign the default Neuron.')
-    alternative_names = models.CharField(max_length=1000,
-                                      help_text='Tube (|) seperated list of alternative terms (i.e. synonyms).')
-    external_identifiers = models.CharField(max_length=1000,
-                                      help_text='A unique identifier for the neuron in an external resource. E.g. CATMAID SKID or neuronID.  Where that external resource has multiple possible identifiers for the neuron, identifier string needs to make this clear. For CATMAID IDs please use SKID_nnnnnn or NeuronID_nnnnnn.')
-    orcid = models.URLField(help_text='Valid orcid, i.e. https://orcid.org/0000-0000-0000-0000')
-    datasetid = models.URLField(help_text='Valid dataset identifier, i.e. IRI. Must already be known to VFB knowledge base.')
-    project = models.CharField(choices=PROJECT_CHOICES,max_length=200, blank=False, help_text= 'A valid name for a project.')
-    classification_comment = models.CharField(max_length=1000,
-                                              help_text='Comment on classification of neuron.')
+    neuron_type = models.CharField(max_length=200, default='FBbt_00005106', blank=False, help_text='Valid VFB Identifier denoting anatomical entity, such as a neuron (FBbt_00005106). If left blank, we will assign the default FBbt_00005106 (Neuron).')
+    alternative_names = models.CharField(max_length=1000, help_text='Tube (|) seperated list of alternative terms (i.e. synonyms). Example input: "Alt label 1|Alt label 2|Alt label 3".')
+    external_identifier = models.CharField(max_length=1000, help_text='A unique identifier for the neuron in an external resource. E.g. CATMAID SKID or neuronID.  Where that external resource has multiple possible identifiers for the neuron, identifier string needs to make this clear. For CATMAID IDs please use SKID_nnnnnn or NeuronID_nnnnnn.')
+    orcid = models.CharField(max_length=200, help_text='Please use your valid orcid, i.e. 0000-0000-0000-0001')
+    datasetid = models.CharField(max_length=200, help_text='Valid dataset identifier, i.e. short form identifier. Must already be known to VFB knowledge base. To register, use dataset REST service. Example input: "Ito2013".')
+    project = models.CharField(max_length=200, blank=False, help_text='A valid name for a project, such as L1EM_Cardona or FAFB.')
+    classification_comment = models.CharField(max_length=1000, help_text='Comment on classification of neuron.')
     created = models.BooleanField()
 
 
@@ -41,20 +37,20 @@ class dataset(models.Model):
         ordering = ('datasetid',)
 
 class neuronSimple(models.Model):
-    primary_name = models.CharField(max_length=200, blank=False, help_text='The primary name for the individual neuron.')
-    neuron_type = models.URLField(default='http://purl.obolibrary.org/obo/FBbt_00005106', blank=False,
-                                  help_text='Valid VFB Identifier denoting anatomical entity, such as a neuron. If left blank, we will assign the default Neuron.')
+    primary_name = models.CharField(max_length=200, blank=False,
+                                    help_text='The primary name for the individual neuron.')
+    neuron_type = models.CharField(max_length=200, default='FBbt_00005106', blank=False,
+                                   help_text='Valid VFB Identifier denoting anatomical entity, such as a neuron (FBbt_00005106). If left blank, we will assign the default FBbt_00005106 (Neuron).')
     alternative_names = models.CharField(max_length=1000,
-                                         help_text='Comma seperated list of alternative terms (i.e. synonyms).')
-    external_identifiers = models.CharField(max_length=1000,
-                                            help_text='A unique identifier for the neuron in an external resource. E.g. CATMAID SKID or neuronID.  Where that external resource has multiple possible identifiers for the neuron, identifier string needs to make this clear. For CATMAID IDs please use SKID_nnnnnn or NeuronID_nnnnnn.')
-    orcid = models.URLField(help_text='Valid orcid, i.e. https://orcid.org/0000-0000-0000-0000')
-    datasetid = models.URLField(
-        help_text='Valid dataset identifier, i.e. IRI. Must already be known to VFB knowledge base.')
-    project = models.CharField(choices=PROJECT_CHOICES, max_length=200, blank=False,
-                               help_text='A valid name for a project.')
-    classification_comment = models.CharField(max_length=1000,
-                                              help_text='Comment on classification of neuron.')
+                                         help_text='Tube (|) seperated list of alternative terms (i.e. synonyms). Example input: "Alt label 1|Alt label 2|Alt label 3".')
+    external_identifier = models.CharField(max_length=1000,
+                                           help_text='A unique identifier for the neuron in an external resource. E.g. CATMAID SKID or neuronID.  Where that external resource has multiple possible identifiers for the neuron, identifier string needs to make this clear. For CATMAID IDs please use SKID_nnnnnn or NeuronID_nnnnnn.')
+    orcid = models.CharField(max_length=200, help_text='Please use your valid orcid, i.e. 0000-0000-0000-0001')
+    datasetid = models.CharField(max_length=200,
+                                 help_text='Valid dataset identifier, i.e. short form identifier. Must already be known to VFB knowledge base. To register, use dataset REST service. Example input: "Ito2013".')
+    project = models.CharField(max_length=200, blank=False,
+                               help_text='A valid name for a project, such as L1EM_Cardona or FAFB.')
+    classification_comment = models.CharField(max_length=1000, help_text='Comment on classification of neuron.')
 
     def __str__(self):
         return self.primary_name

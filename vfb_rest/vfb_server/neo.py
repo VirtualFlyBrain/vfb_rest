@@ -31,7 +31,8 @@ class neo:
         password = os.getenv('KBpassword')
         self.nc = kb_writer(kb, user, password)
         self.pattern_writer = KB_pattern_writer(kb,user,password)
-        self.orcid_pattern="^\s*(?:(?:https?://)?orcid.org/)?([0-9]{4})\-?([0-9]{4})\-?([0-9]{4})\-?([0-9]{4})\s*$"
+        self.orcid_pattern_full = "^(https://orcid.org/)([0-9]{4})\-?([0-9]{4})\-?([0-9]{4})\-?([0-9]{4})$"
+        self.orcid_pattern_id = "^([0-9]{4})\-?([0-9]{4})\-?([0-9]{4})\-?([0-9]{4})$"
 
     def create_or_get_dataset(self,name,license='',short_form='',description=''):
         print('Getting or creating dataset %s' % name)
@@ -39,7 +40,7 @@ class neo:
 
         if vid:
             print('DataSet exists!')
-            n = self.getDatasetMetadata(vid)
+            n = self.getDatasetMetadata(vid,match_on='iri')
             n['created'] = False
             return n
         else:
@@ -50,7 +51,7 @@ class neo:
                 pw.add_dataSet(short_form=short_form, name=name, license=license)
                 pw.commit()
                 vid = self.get_datasetid_if_exists(short_form)
-                n = self.getDatasetMetadata(vid)
+                n = self.getDatasetMetadata(vid,match_on='iri')
                 n['created'] = True
                 return n
             except:
@@ -59,13 +60,17 @@ class neo:
 
     def create_or_get_person(self,orcid):
         print('Getting or creating person %s' % orcid)
-        if not self.valid_orcid(orcid):
-            raise Exception('Person was not successfully created. Invalid orcid: ' + orcid+'. Should look similar to http://orcid.org/0000-0000-0000-0001')
-        vid = self.get_person_if_exists(orcid)
+        match_on = 'short_form'
+        if not self.valid_orcid_id(orcid):
+            if not self.valid_orcid_iri(orcid):
+                raise Exception('Person was not successfully created. Invalid orcid: ' + orcid+'. Should look similar to http://orcid.org/0000-0000-0000-0001')
+            else:
+                match_on = 'iri'
+        vid = self.get_person_if_exists(orcid=orcid,match_on=match_on)
 
         if vid:
             print('Person exists!')
-            n = self.getPersonMetadata(vid)
+            n = self.getPersonMetadata(id=vid)
             n['created']=False
             return n
         else:
@@ -73,17 +78,21 @@ class neo:
             print('Person does not exist!')
             pw = self.pattern_writer
             try:
+                if match_on=='short_form':
+                    orcid='https://orcid.org/'+orcid
                 pw.ni.add_node(labels=["Person",],IRI=orcid)
                 pw.ni.commit()
                 n = self.getPersonMetadata(orcid)
                 n['created'] = True
                 return n
             except:
-                print("An unexpected error occurred")
                 raise
 
-    def valid_orcid(self,orcid):
-        return re.match(self.orcid_pattern,orcid)
+    def valid_orcid_id(self,orcid):
+        return re.match(self.orcid_pattern_id,orcid)
+
+    def valid_orcid_iri(self,orcid):
+        return re.match(self.orcid_pattern_id,orcid)
 
     def create_or_get_neuron(self, primary_name, alternative_names, external_identifier, orcid, datasetid, anatomical_type, project, classification_comment):
         print('Getting or creating ID %s' % primary_name)
@@ -93,7 +102,12 @@ class neo:
         if not did:
             raise Exception('VFB identifier was not successfully created. Unknown dataset id '+datasetid)
 
-        ds = self.getDatasetMetadata(datasetid)
+        pid = self.person_exists(orcid)
+
+        if not pid:
+            raise Exception('VFB identifier was not successfully created. Unknown orcid '+orcid)
+
+        ds = self.getDatasetMetadata(datasetid,match_on='short_form')
         ds_sf = ds['short_form']
         imaging_type = 'SB-SEM'
         label = primary_name + ' of ' + ds['label']
@@ -117,7 +131,6 @@ class neo:
                 sf_template = ''
                 dbxrefs = dict()
                 print('ORCID: '+orcid)
-                orcid = self.get_short_form(orcid)
 
                 if project == "L1EM_Cardona":
                     sf_template = "VFBc_00050000"
@@ -148,10 +161,8 @@ class neo:
                 pw.add_anatomy_image_set(dataset=ds_sf,label=label,anatomical_type=anatomical_type,imaging_type=imaging_type,start=start,template=sf_template, anatomy_attributes=anatomy_attributes,orcid=orcid, dbxrefs=dbxrefs, hard_fail=True)
                 pw.commit()
                 vid = self.get_vfbid_if_exists(label, datasetid)
-                print(":::Y:::"+str(vid))
                 if vid:
                     n = self.getNeuronMetadata(vid)
-                    print(":::Z:::")
                     n['created'] = True
                     return n
                 else:
@@ -161,7 +172,7 @@ class neo:
 
 
     def get_vfbid_if_exists(self, primary_name, datasetid):
-        q = "MATCH (n:Individual {label: '%s'})-[:has_source]-(p {iri:'%s'}) RETURN n,p" % (primary_name, datasetid)
+        q = "MATCH (n:Individual {label: '%s'})-[:has_source]-(p {short_form:'%s'}) RETURN n,p" % (primary_name, datasetid)
         result = self.query(q)
         if result:
             for n in result:
@@ -193,20 +204,19 @@ class neo:
         else:
             return False
 
-    def get_person_if_exists(self, orcid):
-        q = "MATCH (n:Person {iri: '%s'}) RETURN n" % (orcid)
+    def get_person_if_exists(self, orcid,match_on='iri'):
+        q = "MATCH (n:Person {%s: '%s'}) RETURN n" % (match_on,orcid)
         print(q)
         result = self.query(q)
         if result:
             for n in result:
                 iri = n['n']['iri']
-                print(iri)
                 return iri
         else:
             return False
 
     def dataset_exists(self, id):
-        q = "MATCH (n:DataSet {iri: '%s'}) RETURN n" % (id)
+        q = "MATCH (n:DataSet {short_form: '%s'}) RETURN n" % (id)
         print(q)
         result = self.query(q)
         if result:
@@ -216,6 +226,15 @@ class neo:
 
     def node_exists(self, id,on='iri'):
         q = "MATCH (n {%s: '%s'}) RETURN n" % (on,id)
+        print(q)
+        result = self.query(q)
+        if result:
+            return True
+        else:
+            return False
+
+    def person_exists(self, id, on='short_form'):
+        q = "MATCH (n:Person {%s: '%s'}) RETURN n" % (on, id)
         print(q)
         result = self.query(q)
         if result:
@@ -245,22 +264,22 @@ class neo:
         else:
             return False
 
-    def getPersonMetadata(self, iri):
-        q = "MATCH (n:Person {iri:'%s'}) RETURN n" % (iri)
+    def getPersonMetadata(self, id,match_on='iri'):
+        q = "MATCH (n:Person {%s:'%s'}) RETURN n" % (match_on,id)
         result = self.query(q)
         if result:
             for n in result:
                 print('ahsiahj')
                 print(n['n'])
                 n = {
-                    'orcid': '%s' % iri,
+                    'orcid': '%s' % id,
                 }
                 return n
         else:
             return False
 
-    def getDatasetMetadata(self, iri):
-        q = "MATCH (n:DataSet {iri: '%s'}) RETURN n" % (iri)
+    def getDatasetMetadata(self, short_form,match_on='iri'):
+        q = "MATCH (n:DataSet {%s: '%s'}) RETURN n" % (match_on,short_form)
 
         result = self.query(q)
         if result:

@@ -45,17 +45,11 @@ class datasetViewSet(viewsets.ModelViewSet):
             message = str(e)
 
         if message =='':
-            d = serializer.data
-            headers = self.get_success_headers(d)
-            response = dict()
             if created is False:
-                response['data'] = d
-                response['message'] = "A dataset with the given short_form was already created. Return existing record."
-                print("Response: " + str(response))
-                return Response("{message: " + str(response) + "}", status=status.HTTP_202_ACCEPTED)
+                return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        return Response("{message: " + message + "}", status=status.HTTP_404_NOT_FOUND)
+        return Response({"message": message, }, status=status.HTTP_404_NOT_FOUND)
 
     def perform_create(self, serializer):
         serializer.save()
@@ -102,7 +96,7 @@ class neuronViewSet(viewsets.ModelViewSet):
                 return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        return Response("{message: " + message + "}", status=status.HTTP_404_NOT_FOUND)
+        return Response({"message": message, }, status=status.HTTP_404_NOT_FOUND)
 
     def perform_create(self, serializer):
         serializer.save()
@@ -150,17 +144,11 @@ class personViewSet(viewsets.ModelViewSet):
             message = str(e)
 
         if message =='':
-            d = serializer.data
-            headers = self.get_success_headers(d)
-            response = dict()
             if created is False:
-                response['data'] = d
-                response['message'] = "Person was already created.."
-                print("Response: "+str(response))
-                return Response(data=str(response), status=status.HTTP_304_NOT_MODIFIED, headers=headers)
+                return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        return Response("{message: " + message + "}", status=status.HTTP_404_NOT_FOUND)
+        return Response({"message": message,}, status=status.HTTP_404_NOT_FOUND)
 
     def perform_create(self, serializer):
         serializer.save()
