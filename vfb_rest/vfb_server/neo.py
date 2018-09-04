@@ -243,7 +243,7 @@ class neo:
             return False
 
     def getNeuronMetadata(self, iri):
-        q = "MATCH (n:Individual {iri: '%s'})-[:has_source]-(p) MATCH (n)-[:Annotation]-(o) MATCH (n)-[:INSTANCEOF]-(c:Class) MATCH (n)-[:database_cross_reference]-(d) RETURN n,p,c,o,d" % (iri)
+        q = "MATCH (n:Individual {iri: '%s'})-[:has_source]-(p) MATCH (n)-[:Annotation]-(o) MATCH (n)-[:INSTANCEOF]-(c:Class) MATCH (n)-[r:database_cross_reference]-(d) RETURN n,p,c,o,d,r" % (iri)
         #q = "MATCH (n:Individual {iri: '%s'})-[:has_source]-(p) RETURN n,p" % (iri)
         result = self.query(q)
         if result:
@@ -257,7 +257,7 @@ class neo:
                     'alternative_names': '%s' % "|".join(n['n']['synonyms']),
                     'orcid': '%s' % n['o']['short_form'],
                     'datasetid': '%s' % n['p']['short_form'],
-                    'external_identifiers': '%s' % n['d']['short_form'],
+                    'external_identifier': '%s' % n['r']['accession'],
                     'classification_comment': '%s' % 'not implemented'
                 }
                 return n
