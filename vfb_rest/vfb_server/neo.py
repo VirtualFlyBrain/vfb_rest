@@ -8,9 +8,9 @@ from vfb.uk.ac.ebi.vfb.neo4j.neo4j_tools import results_2_dict_list
 
 class neo:
     def __init__(self):
-        os.environ["KBserver"] = "http://localhost:7474"
-        os.environ["KBuser"] = "neo4j"
-        os.environ["KBpassword"] = "neo4j/neo"
+        #os.environ["KBserver"] = "http://localhost:7474"
+        #os.environ["KBuser"] = "neo4j"
+        #os.environ["KBpassword"] = "neo4j/neo"
         kb = os.getenv('KBserver')
         user = os.getenv('KBuser')
         password = os.getenv('KBpassword')
