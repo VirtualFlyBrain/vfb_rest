@@ -253,10 +253,10 @@ class neo:
                 n = {
                     'vfbid': '%s' % n['n']['iri'],
                     'primary_name': '%s' % n['n']['label'],
-                    'neuron_type': '%s' % n['c']['iri'],
+                    'neuron_type': '%s' % n['c']['short_form'],
                     'alternative_names': '%s' % "|".join(n['n']['synonyms']),
-                    'orcid': '%s' % n['o']['iri'],
-                    'datasetid': '%s' % n['p']['iri'],
+                    'orcid': '%s' % n['o']['short_form'],
+                    'datasetid': '%s' % n['p']['short_form'],
                     'external_identifiers': '%s' % n['d']['short_form'],
                     'classification_comment': '%s' % 'not implemented'
                 }
