@@ -25,7 +25,7 @@ class VfbidserverConfig(AppConfig):
 
     def loadVFBids(self):
         from .models import neuron
-        kb = neo()
+        kb = irigen()
         m_ids = kb.getVFBIds()
         i = 0
         for n in m_ids:

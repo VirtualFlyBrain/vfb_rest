@@ -5,6 +5,19 @@ from vfb.uk.ac.ebi.vfb.neo4j.KB_tools import kb_writer, iri_generator, KB_patter
 from vfb.uk.ac.ebi.vfb.neo4j.neo4j_tools import results_2_dict_list
 
 
+class irigen:
+    def __init__(self):
+        # os.environ["KBserver"] = "http://localhost:7474"
+        # os.environ["KBuser"] = "neo4j"
+        # os.environ["KBpassword"] = "neo4j/neo"
+        kb = os.getenv('KBserver')
+        user = os.getenv('KBuser')
+        password = os.getenv('KBpassword')
+        self.iri_generator = iri_generator(kb, user, password)
+        self.iri_generator.set_default_config()
+
+    def getVFBIds(self):
+        return self.iri_generator.id_name
 
 class neo:
     def __init__(self):
@@ -16,8 +29,6 @@ class neo:
         password = os.getenv('KBpassword')
         self.nc = kb_writer(kb, user, password)
         self.pattern_writer = KB_pattern_writer(kb,user,password)
-        self.iri_generator = iri_generator(kb,user,password)
-        self.iri_generator.set_default_config()
         self.orcid_pattern="^\s*(?:(?:https?://)?orcid.org/)?([0-9]{4})\-?([0-9]{4})\-?([0-9]{4})\-?([0-9]{4})\s*$"
 
     def create_or_get_dataset(self,name,license='',short_form='',description=''):
@@ -209,9 +220,6 @@ class neo:
             return True
         else:
             return False
-
-    def getVFBIds(self):
-        return self.iri_generator.id_name
 
     def getNeuronMetadata(self, iri):
         q = "MATCH (n:Individual {iri: '%s'})-[:has_source]-(p) MATCH (n)-[:Annotation]-(o) MATCH (n)-[:INSTANCEOF]-(c:Class) MATCH (n)-[:database_cross_reference]-(d) RETURN n,p,c,o,d" % (iri)
