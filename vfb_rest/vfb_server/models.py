@@ -28,6 +28,8 @@ class dataset(models.Model):
     datasetid = models.URLField(primary_key=True)
     label = models.CharField(max_length=200, help_text='Short human-readable name for dataset.')
     short_form = models.CharField(max_length=50, help_text='Short id for dataset. No special characters or spaces.')
+    publication = models.CharField(max_length=200, help_text='Associated publication (optional).')
+    dataset_source = models.URLField(help_text='URL to dataset (optional).')
     created = models.BooleanField()
 
     def __str__(self):
@@ -61,6 +63,8 @@ class neuronSimple(models.Model):
 class datasetSimple(models.Model):
     label = models.CharField(max_length=200, help_text='Short human-readable name for dataset.')
     short_form = models.CharField(max_length=50, help_text='Short id for dataset. No special characters or spaces.')
+    publication = models.CharField(max_length=200, help_text='Associated publication (optional).')
+    dataset_source = models.URLField(help_text='Link to source data (optional). This is only important if the data is hosted elsewhere.')
 
     def __str__(self):
         return self.label
@@ -77,3 +81,19 @@ class person(models.Model):
 
     class Meta:
         ordering = ('orcid',)
+
+
+
+class neurons(models.Model):
+    orcid = models.CharField(max_length=200, help_text='Please use your valid orcid, i.e. 0000-0000-0000-0001')
+    datasetid = models.CharField(max_length=200, help_text='Valid dataset identifier, i.e. short form identifier. Must already be known to VFB knowledge base. To register, use dataset REST service. Example input: "Ito2013".')
+    project = models.CharField(max_length=200, blank=False, help_text='A valid name for a project, such as L1EM_Cardona or FAFB.')
+    neurons = models.Ar
+    created = models.BooleanField()
+
+
+    def __str__(self):
+        return self.vfbid
+
+    class Meta:
+        ordering = ('vfbid',)
