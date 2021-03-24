@@ -139,12 +139,13 @@ class TestEdgeWriter(unittest.TestCase):
                                               safe_label_edge=True)
         self.edge_writer.commit()
         # TODO Add test here for has_license edge type.
-        q = self.edge_writer.nc.commit_list(["MATCH (x)-[r:has_license]->(y) "
+        q = self.edge_writer.nc.commit_list(["MATCH (x)-[r:has_license|license]->(y) "
                                              "RETURN type(r) AS rel, r.type AS rtype, "
                                              "x.label AS who"])
         r = results_2_dict_list(q)
         if r:
             assert r[0]['rtype'] == 'Annotation'
+            # TODO change to license on data release
             assert r[0]['rel'] == 'has_license'
             assert r[0]['who'] == 'David'
 
