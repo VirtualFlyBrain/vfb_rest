@@ -6,7 +6,7 @@ simplejson==3.9.0
 
 # Testing
 tox==2.4.1
-pylint==1.8.4
+pylint==2.6.1
 coverage==4.5.1
 ipdb==0.10.1
 
